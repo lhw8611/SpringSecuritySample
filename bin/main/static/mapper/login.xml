@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eins.dao.LoginMapper">
+
+	 <select id="getSelectMeberInfo" parameterType="String" resultType="com.eins.dto.Member">
+		/* 회원정보조회 */
+        SELECT 
+	          ID 	as id
+	        , ID 	as username
+	        , PASSWORD as password
+	        , MEMBER_NAME as memberName
+			, USER_ROLE as userRole
+        FROM SECURITY_MEMBER
+   		WHERE ID = #{id}
+    </select>
+    
+	<update id="setUpdatePasswordLockCnt" parameterType="String">
+ 		/*비밀번호 틀린 횟수 증가*/
+ 		UPDATE SECURITY_MEMBER 
+        SET
+      		PASSWORD_LOCK = PASSWORD_LOCK + 1
+        WHERE
+      		id = #{id}
+	</update>
+
+	<update id="setUpdatePasswordLockCntReset" parameterType="String">
+ 		/*비밀번호 틀린 횟수 초기화*/
+ 		UPDATE SECURITY_MEMBER 
+        SET
+      		PASSWORD_LOCK = 0
+        WHERE
+      		id = #{id}
+	</update>
+
+	<insert id="setInsertLoginLog" parameterType="com.eins.dto.LoginLog">
+		INSERT INTO SECURITY_MEMBER_LOG
+		VALUES
+			(
+				  #{id}
+				, #{loginIp}
+	            , now()
+	            , #{status}
+			)
+	</insert>
+	
+</mapper>
